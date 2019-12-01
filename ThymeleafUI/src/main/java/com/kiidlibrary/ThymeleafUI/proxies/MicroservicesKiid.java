@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 //NOM DU MICRO SERVICE A APPELLER A RENSEIGNER DANS APPLICATION PROPERTIES DE kiidlibrary
-@FeignClient(name = "kiidlibrary", url = "localhost:9090")
+@FeignClient(name = "kiidlibrary", url = "192.168.1.16:9090")
 public interface MicroservicesKiid {
 
     @RequestMapping(value = "/kiid", method = RequestMethod.GET)

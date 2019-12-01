@@ -1,10 +1,12 @@
 package com.cloud.kiidlibrary.controller;
 
+import com.cloud.kiidlibrary.configurations.ApplicationPropertiesConfiguration;
 import com.cloud.kiidlibrary.dal.KiidRepository;
 import com.cloud.kiidlibrary.exceptions.NotFoundException;
 import com.cloud.kiidlibrary.model.Kiid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,6 +19,9 @@ public class KiidController {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private final KiidRepository kiidRepository;
+    @Autowired
+    private ApplicationPropertiesConfiguration appProperties;
+
 
     public KiidController(KiidRepository kiidRepository) {
         this.kiidRepository = kiidRepository;
@@ -25,9 +30,9 @@ public class KiidController {
     @RequestMapping(method = RequestMethod.GET)
     public List<Kiid> getAllKiids() {
         LOG.info("Getting all kiids.");
-        List<Kiid> kiids = kiidRepository.findAll();
+        List<Kiid> kiids = kiidRepository.findAll().subList(0, appProperties.getMaxitems());
         if(kiids.isEmpty())  throw new NotFoundException("No kiid found");
-        return kiidRepository.findAll();
+        return kiids;
     }
 
     @RequestMapping(value = "/{kiidId}", method = RequestMethod.GET)

@@ -12,6 +12,14 @@
 <div class="container">
 
     <h1>Application Mcommerce</h1>
+    <div class="row">
+        <div th:each="kiid : ${kiids}" class="col-md-4 my-1">
+            <a th:href="@{|/kiid/${kiid.getKiidId()}|}">
+                <img th:src="${kiid.getKiidProperties().get('documentImg')}" class="card-img-top" />
+                <p th:text="${kiid.getKiidProperties().get('ShareClass')}"></p>
+            </a>
+        </div>
+    </div>
 
 </div>
 

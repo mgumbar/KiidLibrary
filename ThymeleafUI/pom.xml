@@ -53,6 +53,12 @@
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-starter-thymeleaf</artifactId>
       </dependency>
+      <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-openfeign -->
+      <dependency>
+          <groupId>org.springframework.cloud</groupId>
+          <artifactId>spring-cloud-starter-openfeign</artifactId>
+          <version>2.2.0.RELEASE</version>
+      </dependency>
   </dependencies>
 
   <build>

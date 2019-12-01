@@ -25,6 +25,8 @@ public class KiidController {
     @RequestMapping(method = RequestMethod.GET)
     public List<Kiid> getAllKiids() {
         LOG.info("Getting all kiids.");
+        List<Kiid> kiids = kiidRepository.findAll();
+        if(kiids.isEmpty())  throw new NotFoundException("No kiid found");
         return kiidRepository.findAll();
     }
 

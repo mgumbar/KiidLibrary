@@ -8,6 +8,6 @@ public class SleuthConfig {
 
 
     public Sampler defaultSampler(){
-        return Sampler.ALWAYS_SAMPLE;
+        return Sampler.NEVER_SAMPLE;
     }
 }

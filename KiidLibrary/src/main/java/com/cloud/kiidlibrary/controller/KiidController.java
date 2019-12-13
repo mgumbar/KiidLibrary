@@ -7,6 +7,7 @@ import com.cloud.kiidlibrary.model.Kiid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.health.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/kiid")
-public class KiidController {
+public class KiidController implements HealthIndicator {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private final KiidRepository kiidRepository;
@@ -84,4 +85,14 @@ public class KiidController {
             return "Kiid not found.";
         }
     }
+
+    @Override
+    public Health health() {
+        List<Kiid> products = kiidRepository.findAll();
+
+        if(products.isEmpty()) {
+            return Health.down().build();
+        }
+        return Health.up().build();
+    } //suite du code ... }
 }

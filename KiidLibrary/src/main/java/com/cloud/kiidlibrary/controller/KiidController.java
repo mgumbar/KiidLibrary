@@ -4,11 +4,15 @@ import com.cloud.kiidlibrary.configurations.ApplicationPropertiesConfiguration;
 import com.cloud.kiidlibrary.dal.KiidRepository;
 import com.cloud.kiidlibrary.exceptions.NotFoundException;
 import com.cloud.kiidlibrary.model.Kiid;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.*;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -83,6 +87,26 @@ public class KiidController implements HealthIndicator {
             return "Key added";
         } else {
             return "Kiid not found.";
+        }
+    }
+
+
+    @ApiOperation("file upload receive part")
+    @RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public boolean uploadFile(
+            @RequestPart(value = "file")
+                    MultipartFile file){
+        if (file.isEmpty())
+        {
+            return  false;
+        }
+        else
+        {
+            System.out.println("File names is + " + file.getOriginalFilename());
+//            PDDocument doc = PDDocument.load( ... );
+//            PDDocumentCatalog catalog = doc.getDocumentCatalog();
+//            PDMetadata metadata = catalog.getMetadata();
+            return  true;
         }
     }
 

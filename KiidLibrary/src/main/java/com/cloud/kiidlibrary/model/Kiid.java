@@ -16,9 +16,41 @@ public class Kiid {
     private String author;
     private String subject;
     private String fileName;
+    private String producer;
+    private String creator;
     private Date creationDate = new Date();
     private Date updateDate = new Date();
-    private Map<String, String> KiidProperties = new HashMap<>();
+    private Map<String, String> kiidProperties = new HashMap<>();
+    private String nextCloudId;
+
+    public Kiid(String nextCloudId, String title, String author, String subject, String fileName, String producer, String creator, Map<String, String> kiidProperties)
+    {
+        this.nextCloudId = nextCloudId;
+        this.title = title;
+        this.author = author;
+        this.subject = subject;
+        this.fileName = fileName;
+        this.producer = producer;
+        this.creator = creator;
+        this.kiidProperties = kiidProperties;
+    }
+
+    public String getProducer() {
+        return producer;
+    }
+
+    public void setProducer(String producer) {
+        this.producer = producer;
+    }
+
+    public String getNextCloudId() {
+        return nextCloudId;
+    }
+
+    public void setNextCloudId(String nextCloudId) {
+        this.nextCloudId = nextCloudId;
+    }
+
 
     public String getKiidId() {
         return kiidId;
@@ -77,10 +109,18 @@ public class Kiid {
     }
 
     public Map<String, String> getKiidProperties() {
-        return KiidProperties;
+        return kiidProperties;
     }
 
     public void setKiidProperties(Map<String, String> kiidProperties) {
-        KiidProperties = kiidProperties;
+        this.kiidProperties = kiidProperties;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 }

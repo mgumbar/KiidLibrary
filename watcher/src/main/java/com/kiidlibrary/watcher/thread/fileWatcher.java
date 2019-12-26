@@ -48,21 +48,12 @@ public class fileWatcher extends Thread{
                         System.out.println(
                                 "Event kind:" + event.kind()
                                         + ". File affected: " + event.context() + ".");
-//                        String fileName = event.context().toString();
-//                        String contentType = "text/plain";
-//                        byte[] content = null;
-//                        try {
-//                            content = Files.readAllBytes(Paths.get(inPath + "\\" + event.context()));
-//                        } catch (final IOException e) {
-//                        }
-//                        MultipartFile multi = new MockMultipartFile(fileName,
-//                                fileName, contentType, content);
-//                        this.uploadService.upload(multi);
                         File file = new File(inPath + "\\" + event.context());
-                        if (file.exists())
+                        if (file.exists() && !file.getName().endsWith("tmp") && !file.getName().endsWith("crdownload"))
                         {
                             System.out.println("file exists");
-                            this.uploadFile(inPath + "\\" + event.context(), "http://localhost:9090/kiid/upload");
+//                            this.uploadFile(inPath + "\\" + event.context(), "http://localhost:9090/kiid/upload");
+                            this.uploadFile(inPath + "\\" + event.context(), "http://localhost:9004/kiidlibrary/kiid/upload");
                         }
                         else
                         {

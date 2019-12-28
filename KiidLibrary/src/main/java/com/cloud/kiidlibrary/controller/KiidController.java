@@ -1,6 +1,7 @@
 package com.cloud.kiidlibrary.controller;
 
 import com.cloud.kiidlibrary.configurations.ApplicationPropertiesConfiguration;
+import com.cloud.kiidlibrary.dal.KiidDALImpl;
 import com.cloud.kiidlibrary.dal.KiidRepository;
 import com.cloud.kiidlibrary.exceptions.NotFoundException;
 import com.cloud.kiidlibrary.model.Kiid;
@@ -45,12 +46,15 @@ public class KiidController implements HealthIndicator {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private final KiidRepository kiidRepository;
+    private final KiidDALImpl kiidDAL;
+
     @Autowired
     private ApplicationPropertiesConfiguration appProperties;
 
 
-    public KiidController(KiidRepository kiidRepository) {
+    public KiidController(KiidRepository kiidRepository, KiidDALImpl kiidDAL) {
         this.kiidRepository = kiidRepository;
+        this.kiidDAL = kiidDAL;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -69,6 +73,25 @@ public class KiidController implements HealthIndicator {
         return kiidO;
     }
 
+    @RequestMapping(value = "/cloudId/{cloudId}", method = RequestMethod.GET)
+    public Kiid getKiidByCloudId(@PathVariable String cloudId) {
+//        LOG.info("Getting kiid with ID: {}.", cloudId);
+        Kiid kiid = kiidDAL.getByCloudId(this.nextCloudKiidFolder + "/" + cloudId + ".pdf" );
+        if (kiid == null) throw new NotFoundException("Kiid with Id not found" + cloudId);
+        return kiid;
+    }
+
+    @RequestMapping(value = "/cloudId/{cloudId}", method = RequestMethod.DELETE)
+    public boolean deleteKiidByCloudId(@PathVariable String cloudId) {
+        String filePath = this.nextCloudKiidFolder + "/" + cloudId + ".pdf";
+//        LOG.info("Getting kiid with ID: {}.", filePath);
+        Kiid kiid = kiidDAL.getByCloudId(filePath);
+        if (kiid == null) throw new NotFoundException("Kiid with Id not found" + cloudId);
+        this.nxt().removeFile(filePath);
+        kiid.setDeleted(true);
+        kiidRepository.save(kiid);
+        return kiid.getDeleted();
+    }
 
 //    @RequestMapping(value = "/create", method = RequestMethod.POST)
 //    public Kiid addNewKiid(@Valid @RequestBody Kiid kiid) {
@@ -114,22 +137,23 @@ public class KiidController implements HealthIndicator {
 
     @ApiOperation("file upload receive part")
     @RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public boolean uploadFile(@RequestPart(value = "file") MultipartFile file) throws IOException {
+    public Kiid uploadFile(@RequestPart(value = "file") MultipartFile file) throws IOException {
         byte[] fileBytes = file.getBytes();
         if (file.isEmpty())
         {
-            return  false;
+            return  null;
         }
         else
         {
-            NextcloudConnector nxt = new NextcloudConnector(this.nextCloudIp, this.nextCloudUseHttps, this.nextCloudPort, this.nextCloudUser, this.nextCloudPwd);
+
             InputStream inputStream = new ByteArrayInputStream(fileBytes);
-            if(!nxt.folderExists(this.nextCloudKiidFolder))
+            if(!this.nxt().folderExists(this.nextCloudKiidFolder))
             {
-                nxt.createFolder(this.nextCloudKiidFolder);
+                this.nxt().createFolder(this.nextCloudKiidFolder);
             }
-            String nextCloudPath = this.nextCloudKiidFolder + "/" + UUID.randomUUID() + "." + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
-            nxt.uploadFile(inputStream, nextCloudPath);
+            String uuid = UUID.randomUUID().toString();
+            String nextCloudPath = this.nextCloudKiidFolder + "/" + uuid + "." + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
+            this.nxt().uploadFile(inputStream, nextCloudPath);
 
 
             System.out.println("File names is + " + file.getOriginalFilename());
@@ -141,10 +165,9 @@ public class KiidController implements HealthIndicator {
 //            System.out.println( "Modification Date=" + info.getModificationDate());
 //            System.out.println( "Trapped=" + info.getTrapped() );
 
-            String properties = info.getKeywords();
-            Kiid kiid = new Kiid(nextCloudPath, info.getTitle(), info.getAuthor(), info.getSubject(), file.getOriginalFilename(), info.getProducer(), info.getCreator(), this.convertProperties(info.getKeywords()));
+            Kiid kiid = new Kiid(nextCloudPath, info.getTitle(), info.getAuthor(), info.getSubject(), file.getOriginalFilename(), info.getProducer(), info.getCreator(), Kiid.convertProperties(info.getKeywords()));
             kiidRepository.save(kiid);
-            return  true;
+            return  kiid;
         }
     }
 
@@ -156,19 +179,10 @@ public class KiidController implements HealthIndicator {
             return Health.down().build();
         }
         return Health.up().build();
-    } //suite du code ... }
+    }
 
-    private Map<String, String> convertProperties(String keywords)
+    private  NextcloudConnector nxt()
     {
-        Map<String,String> map = new HashMap<>();
-        if (keywords != null && ! keywords.isEmpty()) {
-            String[] keyValuePairs = keywords.split(";");
-            for(String pair : keyValuePairs)
-            {
-                String[] entry = pair.split("=");
-                map.put(entry[0].trim(), entry[1].trim());
-            }
-        }
-        return  map;
+        return new NextcloudConnector(this.nextCloudIp, this.nextCloudUseHttps, this.nextCloudPort, this.nextCloudUser, this.nextCloudPwd);
     }
 }

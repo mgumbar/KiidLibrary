@@ -22,6 +22,7 @@ public class Kiid {
     private Date updateDate = new Date();
     private Map<String, String> kiidProperties = new HashMap<>();
     private String nextCloudId;
+    private Boolean deleted;
 
     public Kiid(String nextCloudId, String title, String author, String subject, String fileName, String producer, String creator, Map<String, String> kiidProperties)
     {
@@ -122,5 +123,27 @@ public class Kiid {
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public static Map<String, String> convertProperties(String keywords)
+    {
+        Map<String,String> map = new HashMap<>();
+        if (keywords != null && ! keywords.isEmpty()) {
+            String[] keyValuePairs = keywords.split(";");
+            for(String pair : keyValuePairs)
+            {
+                String[] entry = pair.split("=");
+                map.put(entry[0].trim(), entry[1].trim());
+            }
+        }
+        return  map;
     }
 }

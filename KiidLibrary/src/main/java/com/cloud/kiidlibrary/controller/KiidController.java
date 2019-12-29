@@ -1,5 +1,6 @@
 package com.cloud.kiidlibrary.controller;
 
+import com.cloud.kiidlibrary.bean.NextCloud;
 import com.cloud.kiidlibrary.configurations.ApplicationPropertiesConfiguration;
 import com.cloud.kiidlibrary.dal.KiidDALImpl;
 import com.cloud.kiidlibrary.dal.KiidRepository;
@@ -8,6 +9,7 @@ import com.cloud.kiidlibrary.model.Kiid;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.aarboard.nextcloud.api.NextcloudConnector;
+import org.aarboard.nextcloud.api.exception.NextcloudApiException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
@@ -30,27 +32,18 @@ import java.util.*;
 @RestController
 @RequestMapping(value = "/kiid")
 public class KiidController implements HealthIndicator {
-    @Value("${nextCloud.Ip}")
-    private String nextCloudIp;
-    @Value("${nextCloud.port}")
-    private int nextCloudPort;
-    @Value("${nextCloud.user}")
-    private String nextCloudUser;
-    @Value("${nextCloud.pwd}")
-    private String nextCloudPwd;
-    @Value("${nextCloud.useHttps}")
-    private boolean nextCloudUseHttps;
-    @Value("${nextCloud.kiidFolder}")
-    private String nextCloudKiidFolder;
-
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private final KiidRepository kiidRepository;
     private final KiidDALImpl kiidDAL;
 
+    @Value("${nextCloud.kiidFolder}")
+    private String nextCloudKiidFolder;
+
     @Autowired
     private ApplicationPropertiesConfiguration appProperties;
-
+    @Autowired
+    private NextCloud nextCloud;
 
     public KiidController(KiidRepository kiidRepository, KiidDALImpl kiidDAL) {
         this.kiidRepository = kiidRepository;
@@ -87,7 +80,7 @@ public class KiidController implements HealthIndicator {
 //        LOG.info("Getting kiid with ID: {}.", filePath);
         Kiid kiid = kiidDAL.getByCloudId(filePath);
         if (kiid == null) throw new NotFoundException("Kiid with Id not found" + cloudId);
-        this.nxt().removeFile(filePath);
+        this.nextCloud.getNextcloudConnector().removeFile(filePath);
         kiid.setDeleted(true);
         kiidRepository.save(kiid);
         return kiid.getDeleted();
@@ -147,13 +140,23 @@ public class KiidController implements HealthIndicator {
         {
 
             InputStream inputStream = new ByteArrayInputStream(fileBytes);
-            if(!this.nxt().folderExists(this.nextCloudKiidFolder))
-            {
-                this.nxt().createFolder(this.nextCloudKiidFolder);
-            }
             String uuid = UUID.randomUUID().toString();
             String nextCloudPath = this.nextCloudKiidFolder + "/" + uuid + "." + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
-            this.nxt().uploadFile(inputStream, nextCloudPath);
+
+            try
+            {
+//                if(!this.nextCloud.getNextcloudConnector().folderExists(this.nextCloudKiidFolder))
+//                {
+//                    this.nextCloud.getNextcloudConnector().createFolder(this.nextCloudKiidFolder);
+//                }
+                this.nextCloud.getNextcloudConnector().uploadFile(inputStream, nextCloudPath);
+            }
+            catch (NextcloudApiException e)
+            {
+//                this.nextCloud.getNextcloudConnector().uploadFile(inputStream, nextCloudPath);
+//                LOG.error(e.getMessage(), e);
+//                LOG.error(e.getStackTrace().toString());
+            }
 
 
             System.out.println("File names is + " + file.getOriginalFilename());
@@ -167,7 +170,8 @@ public class KiidController implements HealthIndicator {
 
             Kiid kiid = new Kiid(nextCloudPath, info.getTitle(), info.getAuthor(), info.getSubject(), file.getOriginalFilename(), info.getProducer(), info.getCreator(), Kiid.convertProperties(info.getKeywords()));
             kiidRepository.save(kiid);
-            return  kiid;
+            doc.close();
+            return kiid;
         }
     }
 
@@ -179,10 +183,5 @@ public class KiidController implements HealthIndicator {
             return Health.down().build();
         }
         return Health.up().build();
-    }
-
-    private  NextcloudConnector nxt()
-    {
-        return new NextcloudConnector(this.nextCloudIp, this.nextCloudUseHttps, this.nextCloudPort, this.nextCloudUser, this.nextCloudPwd);
     }
 }

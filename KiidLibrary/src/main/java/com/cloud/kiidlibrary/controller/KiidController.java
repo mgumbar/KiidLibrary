@@ -6,6 +6,7 @@ import com.cloud.kiidlibrary.dal.KiidDALImpl;
 import com.cloud.kiidlibrary.dal.KiidRepository;
 import com.cloud.kiidlibrary.exceptions.NotFoundException;
 import com.cloud.kiidlibrary.model.Kiid;
+import com.cloud.kiidlibrary.worker.WorkerService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.aarboard.nextcloud.api.NextcloudConnector;
@@ -44,6 +45,9 @@ public class KiidController implements HealthIndicator {
     private ApplicationPropertiesConfiguration appProperties;
     @Autowired
     private NextCloud nextCloud;
+
+    @Autowired
+    private WorkerService workerService;
 
     public KiidController(KiidRepository kiidRepository, KiidDALImpl kiidDAL) {
         this.kiidRepository = kiidRepository;
@@ -149,9 +153,10 @@ public class KiidController implements HealthIndicator {
 //                {
 //                    this.nextCloud.getNextcloudConnector().createFolder(this.nextCloudKiidFolder);
 //                }
-                this.nextCloud.getNextcloudConnector().uploadFile(inputStream, nextCloudPath);
+//                this.nextCloud.getNextcloudConnector().uploadFile(inputStream, nextCloudPath);
+                this.workerService.runAsyncNextCloudWorker(this.nextCloud.getNextcloudConnector(),inputStream, nextCloudPath, 0);
             }
-            catch (NextcloudApiException e)
+            catch (NextcloudApiException | InterruptedException e)
             {
 //                this.nextCloud.getNextcloudConnector().uploadFile(inputStream, nextCloudPath);
 //                LOG.error(e.getMessage(), e);

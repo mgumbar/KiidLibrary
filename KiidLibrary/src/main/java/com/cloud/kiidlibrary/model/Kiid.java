@@ -4,13 +4,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class Kiid {
-
     @Id
+    private ObjectId id;
     private String kiidId;
     private String title;
     private String author;
@@ -36,6 +37,16 @@ public class Kiid {
         this.kiidProperties = kiidProperties;
     }
 
+    public Kiid()
+    {
+    }
+
+    public Kiid(String nextCloudId, String title)
+    {
+        this.nextCloudId = nextCloudId;
+        this.title = title;
+    }
+
     public String getProducer() {
         return producer;
     }
@@ -46,6 +57,10 @@ public class Kiid {
 
     public String getNextCloudId() {
         return nextCloudId;
+    }
+
+    public String getUuid() {
+        return nextCloudId.substring(nextCloudId.indexOf("/") + 1, nextCloudId.indexOf("."));
     }
 
     public void setNextCloudId(String nextCloudId) {
@@ -145,5 +160,13 @@ public class Kiid {
             }
         }
         return  map;
+    }
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
     }
 }

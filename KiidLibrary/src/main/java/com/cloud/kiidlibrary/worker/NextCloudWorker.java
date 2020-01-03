@@ -22,11 +22,16 @@ public class NextCloudWorker
         try {
             if (retry > 5)
                 return;
+            String folderPath = ncPath.substring(0, ncPath.indexOf("/"));
+            if(!nc.folderExists(folderPath))
+            {
+                nc.createFolder(folderPath);
+            }
             nc.uploadFile(is, ncPath);
         } catch (NextcloudApiException ex) {
 
-            Thread.sleep(retry * 1000);
-            this.execute(nc, is, ncPath, retry++);
+            Thread.sleep((long)retry * 1000);
+            this.execute(nc, is, ncPath, retry += 1);
             LOGGER.error(" sleeping thread interrupted retry(" + retry + "):", ex);
         }
         LOGGER.info(" AsyncWorker: completed [" + Thread.currentThread().getName() + "]");

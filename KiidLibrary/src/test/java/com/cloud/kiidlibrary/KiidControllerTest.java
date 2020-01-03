@@ -77,7 +77,7 @@ public class KiidControllerTest {
     }
 
     @Test
-    public void uploadFile() throws IOException {
+    public void uploadFile() throws IOException, InterruptedException {
         String fileName = "kiid_file.pdf";
         Path resourceDirectory = Paths.get("src","test","java","com","cloud","kiidlibrary", "resources", "kiid_file.pdf");
         ClassLoader classLoader = getClass().getClassLoader();
@@ -94,6 +94,7 @@ public class KiidControllerTest {
                 fileName, contentType, content);
 
         Kiid kiidUploaded = controller.uploadFile(multipartFile);
+        Thread.sleep(4000);
 
         //
         byte[] fileBytes = multipartFile.getBytes();

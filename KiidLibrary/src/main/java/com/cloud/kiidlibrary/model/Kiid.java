@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -25,15 +26,15 @@ public class Kiid {
     private String nextCloudId;
     private Boolean deleted;
 
-    public Kiid(String nextCloudId, String title, String author, String subject, String fileName, String producer, String creator, Map<String, String> kiidProperties)
+    public Kiid(String nextCloudId, PDDocumentInformation info, String fileName, Map<String, String> kiidProperties)
     {
         this.nextCloudId = nextCloudId;
-        this.title = title;
-        this.author = author;
-        this.subject = subject;
+        this.title = info.getTitle();
+        this.author = info.getAuthor();
+        this.subject = info.getSubject();
         this.fileName = fileName;
-        this.producer = producer;
-        this.creator = creator;
+        this.producer = info.getProducer();
+        this.creator = info.getCreator();
         this.kiidProperties = kiidProperties;
     }
 
@@ -60,7 +61,7 @@ public class Kiid {
     }
 
     public String getUuid() {
-        return nextCloudId.substring(nextCloudId.indexOf("/") + 1, nextCloudId.indexOf("."));
+        return nextCloudId.substring(nextCloudId.indexOf('/') + 1, nextCloudId.indexOf('.'));
     }
 
     public void setNextCloudId(String nextCloudId) {

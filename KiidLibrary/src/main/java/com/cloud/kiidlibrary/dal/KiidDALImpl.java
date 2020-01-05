@@ -1,7 +1,6 @@
 package com.cloud.kiidlibrary.dal;
 
 import com.cloud.kiidlibrary.model.Kiid;
-import com.cloud.kiidlibrary.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

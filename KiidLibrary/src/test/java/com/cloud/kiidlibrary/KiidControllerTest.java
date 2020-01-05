@@ -104,8 +104,7 @@ public class KiidControllerTest {
         PDDocumentInformation info = doc.getDocumentInformation();
 
         String properties = info.getKeywords();
-//        info.getTitle(), info.getAuthor(), info.getSubject(), multipartFile.getOriginalFilename(), info.getProducer(), info.getCreator(), info.getKeywords()
-        Kiid kiidExpected = new Kiid(kiidUploaded.getNextCloudId(), info.getTitle(), info.getAuthor(), info.getSubject(), multipartFile.getOriginalFilename(), info.getProducer(), info.getCreator(), Kiid.convertProperties(info.getKeywords()));
+        Kiid kiidExpected = new Kiid(kiidUploaded.getNextCloudId(), info, multipartFile.getOriginalFilename(), Kiid.convertProperties(info.getKeywords()));
         this.compareObject(kiidUploaded, kiidExpected);
         //
 

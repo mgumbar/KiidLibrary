@@ -76,8 +76,10 @@ public class KiidController implements HealthIndicator {
     }
 
     @DeleteMapping(path = "/cloudId/{cloudId}")
-    public boolean deleteKiidByCloudId(@PathVariable String cloudId) {
-        String filePath = this.nextCloudKiidFolder + PATH_DELIMITER + cloudId + PDF_FILE_EXTENSION;
+    public boolean deleteKiidByCloudId(@PathVariable String cloudId, String fileExtension) {
+        if (fileExtension.isEmpty())
+            fileExtension = PDF_FILE_EXTENSION;
+        String filePath = this.nextCloudKiidFolder + PATH_DELIMITER + cloudId + fileExtension;
         log.info("Deleting kiid with ID: {}.", filePath);
         Kiid kiid = kiidDAL.getByCloudId(filePath);
         if (kiid == null) throw new NotFoundException(KIID_WITH_ID_NOT_FOUND + cloudId);
@@ -94,7 +96,7 @@ public class KiidController implements HealthIndicator {
 //    }
 
 
-    @GetMapping(path = "/settings/{kiidId}")
+    @GetMapping(path = "/properties/{kiidId}")
     public Object getAllKiidSettings(@PathVariable String kiidId) {
         Optional<Kiid> kiid = kiidRepository.findById(kiidId);
         if (kiid.isPresent()) {
@@ -104,8 +106,8 @@ public class KiidController implements HealthIndicator {
         }
     }
 
-    @GetMapping(path = "/settings/{kiidId}/{key}")
-    public String getKiidProperties(@PathVariable String kiidId, @PathVariable String key) {
+    @GetMapping(path = "/property/{kiidId}/{key}")
+    public String getKiidProperty(@PathVariable String kiidId, @PathVariable String key) {
         Optional<Kiid> kiid = kiidRepository.findById(kiidId);
         if (kiid.isPresent()) {
             return kiid.get().getKiidProperties().get(key);
@@ -115,8 +117,8 @@ public class KiidController implements HealthIndicator {
     }
 
 
-    @GetMapping(path = "/settings/{kiidId}/{key}/{value}")
-    public String addKiidProperties(@PathVariable String kiidId, @PathVariable String key, @PathVariable String value) {
+    @GetMapping(path = "/property/{kiidId}/{key}/{value}")
+    public String addKiidProperty(@PathVariable String kiidId, @PathVariable String key, @PathVariable String value) {
         Optional<Kiid> kiidO = kiidRepository.findById(kiidId);
         if (kiidO.isPresent()) {
             Kiid kiid = kiidO.get();
@@ -127,7 +129,6 @@ public class KiidController implements HealthIndicator {
             return KIID_NOT_FOUND;
         }
     }
-
 
     @ApiOperation("file upload receive part")
     @PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

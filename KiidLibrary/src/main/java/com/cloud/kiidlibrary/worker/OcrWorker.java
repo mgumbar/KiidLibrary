@@ -14,6 +14,7 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
@@ -34,10 +35,13 @@ import java.util.Map;
 @Component
 public class OcrWorker {
     private static final Logger LOGGER = LoggerFactory.getLogger(OcrWorker.class);
-    public static final String TESSDATA_PATH = "../KiidLibraryGlobal/KiidLibrary/src/main/resources/tessdata";
+//    public static final String TESSDATA_PATH = "../KiidLibraryGlobal/KiidLibrary/src/main/resources/tessdata";
+//    private static final String TESSDATA_PATH = "src/test/java/com/cloud/kiidlibrary/resources/tessdata";
+    @Value("${tesseract.dataPath}")
+    private String tessdataPath;
+
     @Autowired
     private KiidRepository kiidRepository;
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Async
     public void processImgPdf(NextcloudConnector nc, PDDocument document, String ncPath, Kiid kiid, int retry) throws InterruptedException, IOException {
@@ -50,7 +54,7 @@ public class OcrWorker {
             }
 
             String fileExtension = "png";
-            int dpi = 600;
+            int dpi = 300;
 
             for (int pageNumber = 0; pageNumber < nbPage; pageNumber++) {
                 File outPutFile = new File(kiid.getUuid() + "_" + (pageNumber) + "." + fileExtension);
@@ -86,7 +90,7 @@ public class OcrWorker {
                 }
                 Tesseract tesseract = new Tesseract();
 
-                tesseract.setDatapath(TESSDATA_PATH);
+                tesseract.setDatapath(tessdataPath);
                 tesseract.setLanguage("eng");
                 String text = tesseract.doOCR(file);
                 String[] lines = text.split("\\r?\\n");
@@ -96,8 +100,8 @@ public class OcrWorker {
                 InputStream newIs = new ByteArrayInputStream(StandardCharsets.UTF_16.encode(text).array());
                 nc.uploadFile(newIs, ncPathTmp);
                 Files.delete(file.toPath());
-                if (file.exists())
-                    log.warn(MessageFormat.format("Error while deleting file: {0}", file.getAbsolutePath()));
+                if (file.exists() && LOGGER.isDebugEnabled())
+                    LOGGER.error(MessageFormat.format("Error while deleting file: {0}", file.getAbsolutePath()));
             }
             kiid.setKiidProperties(properties);
             kiidRepository.save(kiid);

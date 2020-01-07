@@ -30,7 +30,7 @@ public class KiidController implements HealthIndicator {
     public static final String PATH_DELIMITER = "/";
     public static final String PDF_FILE_EXTENSION = ".pdf";
     public static final String KIID_NOT_FOUND = "Kiid not found.";
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private static final Logger log = LoggerFactory.getLogger(KiidController.class);
 
     private final KiidRepository kiidRepository;
     private final KiidDALImpl kiidDAL;
@@ -185,18 +185,25 @@ public class KiidController implements HealthIndicator {
 
     public static File convert(MultipartFile file) throws IOException {
         File convFile = new File(file.getOriginalFilename());
-        if (convFile.createNewFile()) {
-            FileOutputStream fos = new FileOutputStream(convFile);
-            try {
-                fos.write(file.getBytes());
-                return convFile;
-            } finally {
-                fos.close();
+        try {
+            if (convFile.createNewFile()) {
+                FileOutputStream fos = new FileOutputStream(convFile);
+                try {
+                    fos.write(file.getBytes());
+                    return convFile;
+                } finally {
+                    fos.close();
+                }
+
+            } else {
+                log.warn("File already exists {0}.", file.getOriginalFilename());
             }
 
-        } else {
-            throw new IOException("Error while creating new file");
+        } catch (Exception e) {
+            log.error(MessageFormat.format("Error while creating file {0}.", file.getOriginalFilename()), e);
+            throw e;
         }
+        return convFile;
     }
 
     @Override

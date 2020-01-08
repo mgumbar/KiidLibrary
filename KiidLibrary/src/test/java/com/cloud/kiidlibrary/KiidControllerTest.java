@@ -64,12 +64,12 @@ public class KiidControllerTest {
     void tearDown() {
     }
 
-    @Test
+//    @Test
     public void getAllKiids() throws IOException, InterruptedException {
         assertTrue(controller.getAllKiids().size() > 0);
     }
 
-    @Test
+//    @Test
     public void uploadPNGFileOCR() throws IOException, InterruptedException {
         //UPLOAD A FILE
         String fileName = "kiid_file.png";
@@ -142,7 +142,7 @@ public class KiidControllerTest {
         }
     }
 
-    @Test
+//    @Test
     public void uploadFile() throws IOException, InterruptedException {
         //UPLOAD A FILE
         String fileName = "kiid_file.pdf";

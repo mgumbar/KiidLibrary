@@ -139,7 +139,7 @@ public class KiidController implements HealthIndicator {
             InputStream inputStream = new ByteArrayInputStream(fileBytes);
             String uuid = UUID.randomUUID().toString();
             String nextCloudPath = this.nextCloudKiidFolder + PATH_DELIMITER + uuid + '.' + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf('.') + 1);
-            if (log.isDebugEnabled()) {
+            if (!log.isDebugEnabled()) {
                 log.info(MessageFormat.format("File names is : {0} ", file.getOriginalFilename()));
             }
             Kiid kiid = null;

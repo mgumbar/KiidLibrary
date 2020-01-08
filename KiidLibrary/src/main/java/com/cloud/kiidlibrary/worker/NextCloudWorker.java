@@ -18,7 +18,7 @@ public class NextCloudWorker {
 
     @Async
     public void execute(NextcloudConnector nc, InputStream is, String ncPath, int retry) throws InterruptedException {
-        if (LOGGER.isDebugEnabled()) {
+        if (!LOGGER.isDebugEnabled()) {
             LOGGER.info(MessageFormat.format("AsyncWorker: current thread [{0}]", Thread.currentThread().getName()));
         }
         try {
@@ -36,7 +36,7 @@ public class NextCloudWorker {
             this.execute(nc, is, ncPath, retry);
             LOGGER.error(MessageFormat.format(" sleeping thread interrupted retry({0})", retry), ex);
         }
-        if (LOGGER.isDebugEnabled()) {
+        if (!LOGGER.isDebugEnabled()) {
             LOGGER.info(MessageFormat.format("AsyncWorker: completed [{0}]", Thread.currentThread().getName()));
         }
     }

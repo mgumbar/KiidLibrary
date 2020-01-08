@@ -49,7 +49,7 @@ public class OcrWorker {
             List<File> files = new ArrayList<>();
             PDFRenderer pdfRenderer = new PDFRenderer(document);
             int nbPage = document.getDocumentCatalog().getPages().getCount();
-            if (LOGGER.isDebugEnabled()) {
+            if (!LOGGER.isDebugEnabled()) {
                 LOGGER.info(MessageFormat.format("Total files to be converted -> {0}", nbPage));
             }
 
@@ -75,7 +75,7 @@ public class OcrWorker {
 
     @Async
     public void execute(NextcloudConnector nc, List<File> files, String ncPath, Kiid kiid, int retry) throws InterruptedException {
-        if (LOGGER.isDebugEnabled()) {
+        if (!LOGGER.isDebugEnabled()) {
             LOGGER.info(MessageFormat.format(" AsyncWorker: current thread [{0}]", Thread.currentThread().getName()));
         }
         try {
@@ -85,7 +85,7 @@ public class OcrWorker {
                 if (retry > 5)
                     return;
                 String ncPathTmp = ncPath.substring(0, ncPath.indexOf('/') + 1) + file.getName().substring(0, file.getName().lastIndexOf('.') + 1) + "txt";
-                if (LOGGER.isDebugEnabled()) {
+                if (!LOGGER.isDebugEnabled()) {
                     LOGGER.info(MessageFormat.format("FILE EXISTS: [{0}]", file.getName()));
                 }
                 Tesseract tesseract = new Tesseract();
@@ -100,7 +100,7 @@ public class OcrWorker {
                 InputStream newIs = new ByteArrayInputStream(StandardCharsets.UTF_16.encode(text).array());
                 nc.uploadFile(newIs, ncPathTmp);
                 Files.delete(file.toPath());
-                if (file.exists() && LOGGER.isDebugEnabled())
+                if (file.exists() && !LOGGER.isDebugEnabled())
                     LOGGER.error(MessageFormat.format("Error while deleting file: {0}", file.getAbsolutePath()));
             }
             kiid.setKiidProperties(properties);
@@ -116,7 +116,7 @@ public class OcrWorker {
             LOGGER.error(MessageFormat.format(" sleeping thread interrupted retry({0}):", retry), ex);
             this.execute(nc, files, ncPath, kiid, retry);
         }
-        if (LOGGER.isDebugEnabled()) {
+        if (!LOGGER.isDebugEnabled()) {
             LOGGER.info(MessageFormat.format("AsyncWorker: completed [{0}]", Thread.currentThread().getName()));
         }
     }

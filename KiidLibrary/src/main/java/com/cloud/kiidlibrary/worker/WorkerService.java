@@ -26,28 +26,28 @@ public class WorkerService {
 
     public void runAsyncNextCloudWorker(NextcloudConnector nc, InputStream is, String ncPath, int retry) throws InterruptedException {
         long startTime = System.currentTimeMillis();
-        if (LOGGER.isDebugEnabled())
+        if (!LOGGER.isDebugEnabled())
             LOGGER.info(START_OF_EXECUTING_ALL_ASYNC_WORKERS);
         nextCloudWorker.execute(nc, is, ncPath, retry);
-        if (LOGGER.isDebugEnabled())
+        if (!LOGGER.isDebugEnabled())
             LOGGER.info(MessageFormat.format(ASYNC_WORKERS_TOTAL_EXECUTION_TIME_0_SECONDS, (System.currentTimeMillis() - startTime) / 1000));
     }
 
     public void runBulkOCRWorker(NextcloudConnector nc, PDDocument document, String ncPath, Kiid kiid, int retry) throws InterruptedException, IOException {
         long startTime = System.currentTimeMillis();
-        if (LOGGER.isDebugEnabled())
+        if (!LOGGER.isDebugEnabled())
             LOGGER.info(START_OF_EXECUTING_ALL_ASYNC_WORKERS);
         ocrWorker.processImgPdf(nc, document, ncPath, kiid, retry);
-        if (LOGGER.isDebugEnabled())
+        if (!LOGGER.isDebugEnabled())
             LOGGER.info(MessageFormat.format(ASYNC_WORKERS_TOTAL_EXECUTION_TIME_0_SECONDS, (System.currentTimeMillis() - startTime) / 1000));
     }
 
     public void runOCRWorker(NextcloudConnector nc, List<File> files, String ncPath, Kiid kiid, int retry) throws InterruptedException {
         long startTime = System.currentTimeMillis();
-        if (LOGGER.isDebugEnabled())
+        if (!LOGGER.isDebugEnabled())
             LOGGER.info(START_OF_EXECUTING_ALL_ASYNC_WORKERS);
         ocrWorker.execute(nc, files, ncPath, kiid, retry);
-        if (LOGGER.isDebugEnabled())
+        if (!LOGGER.isDebugEnabled())
             LOGGER.info(MessageFormat.format(ASYNC_WORKERS_TOTAL_EXECUTION_TIME_0_SECONDS, (System.currentTimeMillis() - startTime) / 1000));
     }
 }

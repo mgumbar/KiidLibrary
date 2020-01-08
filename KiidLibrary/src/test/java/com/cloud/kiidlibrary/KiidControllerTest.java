@@ -64,12 +64,12 @@ public class KiidControllerTest {
     void tearDown() {
     }
 
-//    @Test
+    @Test
     public void getAllKiids() throws IOException, InterruptedException {
         assertTrue(controller.getAllKiids().size() > 0);
     }
 
-//    @Test
+    @Test
     public void uploadPNGFileOCR() throws IOException, InterruptedException {
         //UPLOAD A FILE
         String fileName = "kiid_file.png";
@@ -86,14 +86,14 @@ public class KiidControllerTest {
         MultipartFile multipartFile = new MockMultipartFile(fileName,
                 fileName, contentType, content);
         Kiid kiidUploaded = controller.uploadFile(multipartFile);
-        lock.await(20000, TimeUnit.MILLISECONDS);
+        lock.await(40000, TimeUnit.MILLISECONDS);
 
         // TEST CONTROLLER: getAllKiidSettings
         Map<String, String> kiidProperties = (Map<String, String>) controller.getAllKiidSettings(kiidUploaded.getId().toString());
         assertEquals(46, kiidProperties.size());
-        assertEquals(String.valueOf(kiidProperties.get("1;0")), String.valueOf("INVESTORS"));
-        assertEquals(String.valueOf(kiidProperties.get("1;20")), String.valueOf("investment schemes managed by AILX as determined by the Remuneration Committee."));
-        assertEquals(String.valueOf(kiidProperties.get("1;45")), String.valueOf("AILX Remuneration Policy February 2016"));
+        assertEquals(String.valueOf(kiidProperties.get("1;0")).toLowerCase(), String.valueOf("INVESTORS").toLowerCase());
+        assertEquals(String.valueOf(kiidProperties.get("1;20")).toLowerCase(), String.valueOf("investment schemes managed by AILX as determined by the Remuneration Committee.").toLowerCase());
+        assertEquals(String.valueOf(kiidProperties.get("1;45")).toLowerCase(), String.valueOf("AILX Remuneration Policy February 2016").toLowerCase());
 
         // TEST CONTROLLER: getKiidByCloudId + delete
         String nextCloudId = kiidUploaded.getNextCloudId();
@@ -118,14 +118,14 @@ public class KiidControllerTest {
         MultipartFile multipartFile = new MockMultipartFile(fileName,
                 fileName, contentType, content);
         Kiid kiidUploaded = controller.uploadFile(multipartFile);
-        lock.await(20000, TimeUnit.MILLISECONDS);
+        lock.await(40000, TimeUnit.MILLISECONDS);
 
         // TEST CONTROLLER: getAllKiidSettings
         Map<String, String> kiidProperties = (Map<String, String>) controller.getAllKiidSettings(kiidUploaded.getId().toString());
         assertEquals(46, kiidProperties.size());
-        assertEquals(String.valueOf(kiidProperties.get("1;0")), String.valueOf("INVESTORS"));
-        assertEquals(String.valueOf(kiidProperties.get("1;20")), String.valueOf("investment schemes managed by AILX as determined by the Remuneration Committee."));
-        assertEquals(String.valueOf(kiidProperties.get("1;45")), String.valueOf("AILX Remuneration Policy February 2016"));
+        assertEquals(String.valueOf(kiidProperties.get("1;0")).toLowerCase(), String.valueOf("INVESTORS").toLowerCase());
+        assertEquals(String.valueOf(kiidProperties.get("1;20")).toLowerCase(), String.valueOf("investment schemes managed by AILX as determined by the Remuneration Committee.").toLowerCase());
+        assertEquals(String.valueOf(kiidProperties.get("1;45")).toLowerCase(), String.valueOf("AILX Remuneration Policy February 2016").toLowerCase());
 
         // TEST CONTROLLER: getKiidByCloudId + delete
         String nextCloudId = kiidUploaded.getNextCloudId();
@@ -142,7 +142,7 @@ public class KiidControllerTest {
         }
     }
 
-//    @Test
+    @Test
     public void uploadFile() throws IOException, InterruptedException {
         //UPLOAD A FILE
         String fileName = "kiid_file.pdf";

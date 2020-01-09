@@ -1,7 +1,6 @@
 FROM java:8
 VOLUME /tmp
 ADD target/library-0.0.1-SNAPSHOT.jar library.jar
-RUN apt-get -q -y install libleptonica-dev
 RUN apt-get -q -y install libtesseract3 libtesseract-dev
 
 RUN apt-get -q -y install tesseract-ocr

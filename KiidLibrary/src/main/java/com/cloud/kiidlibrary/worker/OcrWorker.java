@@ -144,7 +144,7 @@ public class OcrWorker {
                 else
                     System.out.println("MUSTAFA NO");
 
-                myPath = "KiidLibrary/src/main/resources/tessdata";
+                myPath = "./usr/share/tesseract-ocr/tessdata";
                 if (new File(myPath).exists())
                     System.out.println(myPath);
                 if (new File(myPath).exists())
@@ -152,7 +152,7 @@ public class OcrWorker {
                 else
                     System.out.println("MUSTAFA NO");
 
-                tesseract.setDatapath(filePath);
+                tesseract.setDatapath("./usr/share/tesseract-ocr/tessdata");
                 tesseract.setLanguage("eng");
                 String text = tesseract.doOCR(file);
                 String[] lines = text.split("\\r?\\n");

@@ -20,10 +20,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.MessageFormat;
@@ -88,9 +85,14 @@ public class OcrWorker {
                 if (!LOGGER.isDebugEnabled()) {
                     LOGGER.info(MessageFormat.format("FILE EXISTS: [{0}]", file.getName()));
                 }
-                Tesseract tesseract = new Tesseract();
 
-                tesseract.setDatapath(tessdataPath);
+                Tesseract tesseract = new Tesseract();
+                String filePath = getClass().getResource("/bootstrap.properties").getFile();
+                if (!LOGGER.isDebugEnabled()) {
+                    LOGGER.info(MessageFormat.format("TESSDATA FILE PATH: [{0}]", filePath));
+                }
+                filePath = filePath.replace("bootstrap.properties", "tessdata").substring(1);
+                tesseract.setDatapath(filePath);
                 tesseract.setLanguage("eng");
                 String text = tesseract.doOCR(file);
                 String[] lines = text.split("\\r?\\n");

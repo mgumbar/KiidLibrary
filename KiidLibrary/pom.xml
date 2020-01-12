@@ -114,21 +114,15 @@
 
     <build>
         <resources>
-            <resource>
-                <directory>${basedir}/src/main/resources/tessdata</directory>
-                <filtering>false</filtering>
-                <includes>
-                    <include>*</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>${basedir}/src/main/resources</directory>
-                <filtering>false</filtering>
-                <includes>
-                    <include>*</include>
-                </includes>
-            </resource>
-        </resources>
+        <resource>
+            <directory>${basedir}/src/main/resources</directory>
+            <!--                <filtering>false</filtering>-->
+            <includes>
+                <include>tessdata/configs</include>
+                <include>**/*.*</include>
+            </includes>
+        </resource>
+    </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

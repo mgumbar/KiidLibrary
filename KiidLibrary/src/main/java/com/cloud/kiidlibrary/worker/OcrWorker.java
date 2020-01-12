@@ -95,7 +95,7 @@ public class OcrWorker {
                 if (System.getProperty("os.name").toLowerCase().contains("windows"))
                     filePath = filePath.substring(1);
                 else if (filePath.toLowerCase().startsWith("file:"))
-                    filePath = "BOOT-INF/classes/tessdata/";                 
+                    filePath = "BOOT-INF/classes/tessdata/";
                 tesseract.setDatapath(filePath);
                 tesseract.setLanguage("eng");
                 String text = tesseract.doOCR(file);

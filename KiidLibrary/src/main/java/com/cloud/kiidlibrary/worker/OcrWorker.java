@@ -23,6 +23,7 @@ import javax.imageio.ImageIO;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +88,9 @@ public class OcrWorker {
                 }
 
                 Tesseract tesseract = new Tesseract();
-                String filePath = getClass().getResource("/bootstrap.properties").getFile();
+
+//                String filePath = getClass().getResource("/bootstrap.properties").getFile();
+                String filePath = getClass().getResource("/bootstrap.properties").getPath();
                 if (!LOGGER.isDebugEnabled()) {
                     LOGGER.info(MessageFormat.format("TESSDATA FILE PATH: [{0}]", filePath));
                 }
@@ -96,6 +99,50 @@ public class OcrWorker {
                     filePath = filePath.substring(1);
                 else if (filePath.toLowerCase().startsWith("file:"))
                     filePath = "BOOT-INF/classes/tessdata";
+
+                if (new File("library.jar!/BOOT-INF/classes!/tessdata/eng.traineddata").exists())
+                    System.out.println("MUSTAFA YES library.jar!/BOOT-INF/classes!/tessdata/eng.traineddata");
+                else
+                    System.out.println("MUSTAFA NO library.jar!/BOOT-INF/classes!/tessdata/eng.traineddata");
+
+                String myPath = "/BOOT-INF/classes!/tessdata/eng.traineddata";
+                System.out.println(myPath);
+                if (new File(myPath).exists())
+                    System.out.println("MUSTAFA YES");
+                else
+                    System.out.println("MUSTAFA NO");
+
+                myPath = "../BOOT-INF/classes!/tessdata/eng.traineddata";
+                if (new File(myPath).exists())
+                    System.out.println(myPath);
+                if (new File(myPath).exists())
+                    System.out.println("MUSTAFA YES");
+                else
+                    System.out.println("MUSTAFA NO");
+
+                myPath = "../library.jar/BOOT-INF/classes/tessdata/eng.traineddata";
+                if (new File(myPath).exists())
+                    System.out.println(myPath);
+                if (new File(myPath).exists())
+                    System.out.println("MUSTAFA YES");
+                else
+                    System.out.println("MUSTAFA NO");
+
+                myPath = "../library.jar!/BOOT-INF/classes!/tessdata/eng.traineddata";
+                if (new File(myPath).exists())
+                    System.out.println(myPath);
+                if (new File(myPath).exists())
+                    System.out.println("MUSTAFA YES");
+                else
+                    System.out.println("MUSTAFA NO");
+
+                myPath = "../BOOT-INF/classes/tessdata/eng.traineddata";
+                if (new File(myPath).exists())
+                    System.out.println(myPath);
+                if (new File(myPath).exists())
+                    System.out.println("MUSTAFA YES");
+                else
+                    System.out.println("MUSTAFA NO");
 
                 tesseract.setDatapath(filePath);
                 tesseract.setLanguage("eng");

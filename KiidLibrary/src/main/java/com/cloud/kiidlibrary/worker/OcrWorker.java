@@ -94,6 +94,13 @@ public class OcrWorker {
                 filePath = filePath.replace("bootstrap.properties", "tessdata");
                 if (System.getProperty("os.name").toLowerCase().contains("windows"))
                     filePath = filePath.substring(1);
+                else
+                {
+                    filePath = filePath.substring(5);
+                }
+                if (!LOGGER.isDebugEnabled()) {
+                    LOGGER.info(MessageFormat.format("TESSDATA FILE PATH: [{0}]", filePath));
+                }
                 tesseract.setDatapath(filePath);
                 tesseract.setLanguage("eng");
                 String text = tesseract.doOCR(file);

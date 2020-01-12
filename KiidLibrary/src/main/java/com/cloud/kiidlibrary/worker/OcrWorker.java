@@ -100,19 +100,19 @@ public class OcrWorker {
                 else if (filePath.toLowerCase().startsWith("file:"))
                     filePath = "BOOT-INF/classes/tessdata";
 
-                if (new File("library.jar!/BOOT-INF/classes!/tessdata/eng.traineddata").exists())
+                if (new File("../KiidLibraryGlobal/KiidLibrary/src/main/resources/tessdata").exists())
                     System.out.println("MUSTAFA YES library.jar!/BOOT-INF/classes!/tessdata/eng.traineddata");
                 else
                     System.out.println("MUSTAFA NO library.jar!/BOOT-INF/classes!/tessdata/eng.traineddata");
 
-                String myPath = "/BOOT-INF/classes!/tessdata/eng.traineddata";
+                String myPath = "/KiidLibraryGlobal/KiidLibrary/src/main/resources/tessdata";
                 System.out.println(myPath);
                 if (new File(myPath).exists())
                     System.out.println("MUSTAFA YES");
                 else
                     System.out.println("MUSTAFA NO");
 
-                myPath = "../BOOT-INF/classes!/tessdata/eng.traineddata";
+                myPath = "../KiidLibraryGlobal/KiidLibrary/src/main/resources/tessdata";
                 if (new File(myPath).exists())
                     System.out.println(myPath);
                 if (new File(myPath).exists())
@@ -120,7 +120,7 @@ public class OcrWorker {
                 else
                     System.out.println("MUSTAFA NO");
 
-                myPath = "../library.jar/BOOT-INF/classes/tessdata/eng.traineddata";
+                myPath = "KiidLibraryGlobal/KiidLibrary/src/main/resources/tessdata";
                 if (new File(myPath).exists())
                     System.out.println(myPath);
                 if (new File(myPath).exists())
@@ -128,7 +128,7 @@ public class OcrWorker {
                 else
                     System.out.println("MUSTAFA NO");
 
-                myPath = "../library.jar!/BOOT-INF/classes!/tessdata/eng.traineddata";
+                myPath = "../KiidLibrary/src/main/resources/tessdata";
                 if (new File(myPath).exists())
                     System.out.println(myPath);
                 if (new File(myPath).exists())
@@ -136,7 +136,15 @@ public class OcrWorker {
                 else
                     System.out.println("MUSTAFA NO");
 
-                myPath = "../BOOT-INF/classes/tessdata/eng.traineddata";
+                myPath = "/KiidLibrary/src/main/resources/tessdata";
+                if (new File(myPath).exists())
+                    System.out.println(myPath);
+                if (new File(myPath).exists())
+                    System.out.println("MUSTAFA YES");
+                else
+                    System.out.println("MUSTAFA NO");
+
+                myPath = "KiidLibrary/src/main/resources/tessdata";
                 if (new File(myPath).exists())
                     System.out.println(myPath);
                 if (new File(myPath).exists())

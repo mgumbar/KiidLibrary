@@ -98,61 +98,9 @@ public class OcrWorker {
                 if (System.getProperty("os.name").toLowerCase().contains("windows"))
                     filePath = filePath.substring(1);
                 else if (filePath.toLowerCase().startsWith("file:"))
-                    filePath = "BOOT-INF/classes/tessdata";
+                    filePath = "../usr/share/tesseract-ocr/tessdata";
 
-                if (new File("../KiidLibraryGlobal/KiidLibrary/src/main/resources/tessdata").exists())
-                    System.out.println("MUSTAFA YES library.jar!/BOOT-INF/classes!/tessdata/eng.traineddata");
-                else
-                    System.out.println("MUSTAFA NO library.jar!/BOOT-INF/classes!/tessdata/eng.traineddata");
-
-                String myPath = "/KiidLibraryGlobal/KiidLibrary/src/main/resources/tessdata";
-                System.out.println(myPath);
-                if (new File(myPath).exists())
-                    System.out.println("MUSTAFA YES");
-                else
-                    System.out.println("MUSTAFA NO");
-
-                myPath = "../KiidLibraryGlobal/KiidLibrary/src/main/resources/tessdata";
-                if (new File(myPath).exists())
-                    System.out.println(myPath);
-                if (new File(myPath).exists())
-                    System.out.println("MUSTAFA YES");
-                else
-                    System.out.println("MUSTAFA NO");
-
-                myPath = "KiidLibraryGlobal/KiidLibrary/src/main/resources/tessdata";
-                if (new File(myPath).exists())
-                    System.out.println(myPath);
-                if (new File(myPath).exists())
-                    System.out.println("MUSTAFA YES");
-                else
-                    System.out.println("MUSTAFA NO");
-
-                myPath = "usr/share/tesseract-ocr/tessdata";
-                if (new File(myPath).exists())
-                    System.out.println(myPath);
-                if (new File(myPath).exists())
-                    System.out.println("MUSTAFA YES");
-                else
-                    System.out.println("MUSTAFA NO");
-
-                myPath = "/usr/share/tesseract-ocr/tessdata";
-                if (new File(myPath).exists())
-                    System.out.println(myPath);
-                if (new File(myPath).exists())
-                    System.out.println("MUSTAFA YES");
-                else
-                    System.out.println("MUSTAFA NO");
-
-                myPath = "../usr/share/tesseract-ocr/tessdata";
-                if (new File(myPath).exists())
-                    System.out.println(myPath);
-                if (new File(myPath).exists())
-                    System.out.println("MUSTAFA YES");
-                else
-                    System.out.println("MUSTAFA NO");
-
-                tesseract.setDatapath("../usr/share/tesseract-ocr/tessdata");
+                tesseract.setDatapath(filePath);
                 tesseract.setLanguage("eng");
                 String text = tesseract.doOCR(file);
                 String[] lines = text.split("\\r?\\n");

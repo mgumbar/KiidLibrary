@@ -94,7 +94,7 @@ public class OcrWorker {
                 filePath = filePath.replace("bootstrap.properties", "tessdata");
                 if (System.getProperty("os.name").toLowerCase().contains("windows"))
                     filePath = filePath.substring(1);
-                else if (filePath.startsWith("File:"))
+                else if (filePath.toLowerCase().startsWith("file:"))
                 {
                     filePath = filePath.substring(5);
                 }

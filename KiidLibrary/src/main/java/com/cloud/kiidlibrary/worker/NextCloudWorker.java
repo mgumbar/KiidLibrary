@@ -1,9 +1,11 @@
 package com.cloud.kiidlibrary.worker;
 
+import com.cloud.kiidlibrary.bean.NextCloud;
 import org.aarboard.nextcloud.api.NextcloudConnector;
 import org.aarboard.nextcloud.api.exception.NextcloudApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,8 @@ import java.text.MessageFormat;
 @Component
 public class NextCloudWorker {
     private static final Logger LOGGER = LoggerFactory.getLogger(NextCloudWorker.class);
+    @Autowired
+    private NextCloud nextCloud;
 
     @Async
     public void execute(NextcloudConnector nc, InputStream is, String ncPath, int retry) throws InterruptedException {
@@ -25,8 +29,8 @@ public class NextCloudWorker {
             if (retry > 5)
                 return;
             String folderPath = ncPath.substring(0, ncPath.indexOf('/'));
-            if (!nc.folderExists(folderPath)) {
-                nc.createFolder(folderPath);
+            if (!nextCloud.getNextcloudConnector().folderExists(folderPath)) {
+                nextCloud.getNextcloudConnector().createFolder(folderPath);
             }
             nc.uploadFile(is, ncPath);
         } catch (NextcloudApiException ex) {

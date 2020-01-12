@@ -1,5 +1,6 @@
 package com.cloud.kiidlibrary.worker;
 
+import com.cloud.kiidlibrary.bean.NextCloud;
 import com.cloud.kiidlibrary.dal.KiidRepository;
 import com.cloud.kiidlibrary.model.Kiid;
 import net.sourceforge.tess4j.*;
@@ -41,9 +42,13 @@ public class OcrWorker {
     @Autowired
     private KiidRepository kiidRepository;
 
+    @Autowired
+    private NextCloud nextCloud;
+
     @Async
     public void processImgPdf(NextcloudConnector nc, PDDocument document, String ncPath, Kiid kiid, int retry) throws InterruptedException, IOException {
         try {
+            nc = nextCloud.getNextcloudConnector();
             List<File> files = new ArrayList<>();
             PDFRenderer pdfRenderer = new PDFRenderer(document);
             int nbPage = document.getDocumentCatalog().getPages().getCount();
@@ -77,6 +82,7 @@ public class OcrWorker {
             LOGGER.info(MessageFormat.format(" AsyncWorker: current thread [{0}]", Thread.currentThread().getName()));
         }
         try {
+            nc = nextCloud.getNextcloudConnector();
             Map<String, String> properties = kiid.getKiidProperties();
             for (int f = 0; f < files.size(); f++) {
                 File file = files.get(f);

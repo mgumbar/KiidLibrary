@@ -115,6 +115,10 @@
     <build>
         <resources>
             <resource>
+                <directory>${basedir}/src/main/resources/tessdata</directory>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
                 <directory>${basedir}/src/main/resources</directory>
                 <filtering>false</filtering>
             </resource>

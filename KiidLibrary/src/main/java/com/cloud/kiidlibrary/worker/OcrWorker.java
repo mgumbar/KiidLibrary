@@ -24,7 +24,6 @@ import javax.imageio.ImageIO;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +33,6 @@ import java.util.Map;
 @Component
 public class OcrWorker {
     private static final Logger LOGGER = LoggerFactory.getLogger(OcrWorker.class);
-//    public static final String TESSDATA_PATH = "../KiidLibraryGlobal/KiidLibrary/src/main/resources/tessdata";
-//    private static final String TESSDATA_PATH = "src/test/java/com/cloud/kiidlibrary/resources/tessdata";
     @Value("${tesseract.dataPath}")
     private String tessdataPath;
 
@@ -89,17 +86,8 @@ public class OcrWorker {
                 if (retry > 5)
                     return;
                 String ncPathTmp = ncPath.substring(0, ncPath.indexOf('/') + 1) + file.getName().substring(0, file.getName().lastIndexOf('.') + 1) + "txt";
-                if (!LOGGER.isDebugEnabled()) {
-                    LOGGER.info(MessageFormat.format("FILE EXISTS: [{0}]", file.getName()));
-                }
-
                 Tesseract tesseract = new Tesseract();
-
-//                String filePath = getClass().getResource("/bootstrap.properties").getFile();
                 String filePath = getClass().getResource("/bootstrap.properties").getPath();
-                if (!LOGGER.isDebugEnabled()) {
-                    LOGGER.info(MessageFormat.format("TESSDATA FILE PATH: [{0}]", filePath));
-                }
                 filePath = filePath.replace("bootstrap.properties", "tessdata");
                 if (System.getProperty("os.name").toLowerCase().contains("windows"))
                     filePath = filePath.substring(1);

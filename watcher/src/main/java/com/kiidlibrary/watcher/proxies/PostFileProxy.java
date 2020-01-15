@@ -11,7 +11,8 @@ import java.util.List;
 
 @Configuration
 @Component
-@FeignClient(name = "zuul", url = "192.168.1.16:9004")
+//@FeignClient(name = "zuul", url = "192.168.1.16:9004")
+@FeignClient(name = "zuul", url = "localhost:9004")
 @RibbonClient(name = "kiidlibrary")
 public interface PostFileProxy {
 
